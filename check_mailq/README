@@ -1,0 +1,3 @@
+check_mailq
+
+Simple Nagios plugin that checks postfix mailq
