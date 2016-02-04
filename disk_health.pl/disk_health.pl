@@ -40,6 +40,7 @@ my %messages = (
     lsi_errors          => ' %s Errors at LSI-RAID;',
     lsi_state_policy    => ' state "%s" on VD%s is not optimal;',
     tw_state_policy     => ' state is not optimal; %s dives affected;',
+    tw_raid_status      => ' RAID Unit %s is %s, %s finished;',
     tw_port_status      => ' Port%s status "%s" is not optimal;',
     hp_vol_state_policy => ' "%s" state is not optimal at %s;',
     hp_var_policy       => ' "%s" status is not OK at %s;',
@@ -393,6 +394,24 @@ sub check_tw_wc_status {
                     set_result('CRITICAL');
                     $result_description .= sprintf $messages{'raid_wc_policy'},
                         $current_cache_status, $cont_id;
+                }
+            }
+            if ( $line =~ m/^u(\d+)\s+RAID-\d+\s+(\S+)\s+(\d+%)/ ) {
+                my $tw_unit_id = $1;
+                my $raid_status = $2;
+                my $tw_rebuild_status = $3;
+                push @tw_ports, $tw_unit_id;
+                if ( $raid_status eq "REBUILDING" ) {
+                    set_result('WARNING');
+                    $result_description .= sprintf $messages{'tw_raid_status'},
+                        $tw_unit_id, $raid_status, $tw_rebuild_status;
+                    return \@tw_ports;
+                }
+                if ( $raid_status eq "REBUILD-PAUSED" ) {
+                    set_result('CRITICAL');
+                    $result_description .= sprintf $messages{'tw_raid_status'},
+                         $tw_unit_id, $raid_status, $tw_rebuild_status;
+                    return \@tw_ports;
                 }
             }
             if ( $line =~ m/^p(\d+)\s+(\S+)/ ) {
