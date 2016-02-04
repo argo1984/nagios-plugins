@@ -1,0 +1,17 @@
+disk_health.pl
+
+Monitors RAID and SMART information: virtual disk status, write-cache status, BBU status, pending sectors, relocated sectors ("defect list" for SAS), temperature, self-test status.
+RAID/HDD monitoring script.
+
+Supported devices:
+LSI (aka PERC), 3ware, HP Smart Array (CCISS)
+
+RAID data:
+virtual disk status, write-cache status, BBU status (for LSI and HP Smart Array)
+
+SMART data:
+pending sectors, relocated sectors ("defect list" for SAS), temperature, self-test status. Maximum temperature within all drives is reported via the performance data and could be displayed on a RRD graphs.
+
+Please note that nagios user should run the script using root privileges (e.g. via sudo).
+
+https://exchange.nagios.org/directory/Plugins/Hardware/Storage-Systems/RAID-Controllers/RAID-monitoring-script--2D-LSI-2FPERC-2F3ware-2FHP-Smart-Array/details
